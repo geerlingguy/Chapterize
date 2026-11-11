@@ -71,3 +71,7 @@ done
 ```
 
 (`brew install librsvg` for `rsvg-convert`.)
+
+## AI Disclosure
+
+This project was built with heavy assistance from Claude Opus in 2026.
