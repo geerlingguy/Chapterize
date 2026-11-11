@@ -39,7 +39,7 @@ Any Ollama model works. The Settings window lists the ones you've already pulled
 
 ## Tuning
 
-- **Settings › Title style examples:** a few of your real chapter titles, so the model picks up your voice. The defaults come from the four sample videos, so test against other videos to judge quality fairly.
+- **Settings › Title style examples:** a few of your real chapter titles, so the model picks up your voice. The defaults are 30 titles from 2025 videos; Reset in Settings restores them.
 - **CLI for prompt iteration:** batch-run a folder of SRTs. If a same-named `.txt` sits next to an `.srt`, it gets printed alongside for comparison.
 
   ```sh
