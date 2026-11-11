@@ -32,7 +32,10 @@ def main():
     args = p.parse_args()
 
     videos = {}
-    for md in sorted(args.root.rglob("*.md")):
+    # Only <root>/<video>/*.md: a full recursive walk crawls every footage and FCP library folder.
+    for md in sorted(args.root.glob("*/*.md")):
+        if md.name.startswith("._"):  # macOS AppleDouble files on non-APFS volumes
+            continue
         if titles := chapters(md):
             videos.setdefault(md.parent.name, []).extend(titles)
 
