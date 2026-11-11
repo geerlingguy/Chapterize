@@ -1,0 +1,24 @@
+name: Build
+
+on:
+  push:
+    branches: [master]
+    tags: ['*']
+
+jobs:
+  build:
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Build Chapterize.app
+        run: ./build.sh
+
+      # Artifacts drop symlinks and exec bits, so ship the .app zipped.
+      - name: Zip app
+        run: ditto -c -k --keepParent build/Chapterize.app Chapterize.zip
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Chapterize
+          path: Chapterize.zip
