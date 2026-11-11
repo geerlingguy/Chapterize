@@ -54,13 +54,24 @@ public struct OpenAICompatibleLLM: ChapterLLM {
         return ChapterText.stripThinking(message["content"] as? String ?? "")
     }
 
-    /// Model IDs from `GET /models` (for the Settings picker).
-    public static func models(baseURL: URL, apiKey: String) async throws -> [String] {
+    public struct ServerModel: Sendable {
+        public let id: String
+        public let contextLength: Int?
+    }
+
+    /// Models from `GET /models` (for the Settings picker), with context length when the server reports it.
+    public static func models(baseURL: URL, apiKey: String) async throws -> [ServerModel] {
         var request = request(baseURL.appendingPathComponent("models"), apiKey: apiKey)
         request.timeoutInterval = 5
         let json = try await send(request, baseURL: baseURL)
         let data = json["data"] as? [[String: Any]] ?? []
-        return data.compactMap { $0["id"] as? String }.sorted()
+        return data.compactMap { m -> ServerModel? in
+            guard let id = m["id"] as? String else { return nil }
+            // vLLM: max_model_len; LM Studio, OpenRouter, others: context_length.
+            let ctx = (m["max_model_len"] ?? m["context_length"] ?? m["max_context_length"]) as? Int
+            return ServerModel(id: id, contextLength: ctx)
+        }
+        .sorted { $0.id < $1.id }
     }
 
     private static func request(_ url: URL, apiKey: String) -> URLRequest {

@@ -13,6 +13,7 @@ struct SettingsView: View {
     @AppStorage(AppSettings.headerKey) private var includeHeader = true
 
     @State private var models: [String] = []
+    @State private var detectedContext: [String: Int] = [:]
     @State private var status = "Checking…"
 
     var body: some View {
@@ -67,6 +68,7 @@ struct SettingsView: View {
         .formStyle(.grouped)
         .frame(width: 540, height: 700)
         .task(id: provider) { await refresh() }
+        .onChange(of: openaiModel) { applyDetectedContext() }
     }
 
     private func modelRow(_ field: some View, select: @escaping (String) -> Void) -> some View {
@@ -104,15 +106,25 @@ struct SettingsView: View {
             return
         }
         do {
-            models = try await OpenAICompatibleLLM.models(baseURL: url, apiKey: openaiKey)
+            let list = try await OpenAICompatibleLLM.models(baseURL: url, apiKey: openaiKey)
+            models = list.map(\.id)
+            detectedContext = Dictionary(list.compactMap { m in m.contextLength.map { (m.id, $0) } },
+                                         uniquingKeysWith: { first, _ in first })
             if openaiModel.isEmpty, let first = models.first { openaiModel = first }
+            applyDetectedContext()
+            let ctx = detectedContext[openaiModel].map { " · \($0.formatted())-token context" } ?? ""
             status = models.isEmpty
                 ? "Connected, but the server listed no models. Type the model name."
-                : "Connected to \(url.absoluteString) · \(models.count) model\(models.count == 1 ? "" : "s")"
+                : "Connected to \(url.absoluteString) · \(models.count) model\(models.count == 1 ? "" : "s")\(ctx)"
         } catch {
             models = []
+            detectedContext = [:]
             status = "Couldn't list models at \(url.absoluteString)/models: \(error.localizedDescription)"
         }
+    }
+
+    private func applyDetectedContext() {
+        if let ctx = detectedContext[openaiModel] { openaiContext = ctx }
     }
 
     private func refreshOllama() async {

@@ -35,7 +35,7 @@ Requires macOS 26 and Xcode 26 (or its Command Line Tools). No Xcode project.
 
 Any Ollama model works. The Settings window lists the ones you've already pulled. `gemma3:4b` is lighter and faster if you have less memory to spare. The Ollama server URL is configurable, so you can point it at another machine.
 
-**OpenAI-compatible server:** point Chapterize at anything that speaks `/v1/chat/completions` (vLLM, llama.cpp, LM Studio, MLX, OpenAI). Set the base URL (e.g. `http://turnstone.local:8000/v1`), an optional API key, and the model (Refresh lists what the server has). Set *Context* to the server's max context length so long transcripts are only split when they need to be. `<think>` blocks are stripped from replies.
+**OpenAI-compatible server:** point Chapterize at anything that speaks `/v1/chat/completions` (vLLM, llama.cpp, LM Studio, MLX, OpenAI). Set the base URL (e.g. `http://turnstone.local:8000/v1`), an optional API key, and the model (Refresh lists what the server has). *Context* is filled in from the server when it reports one (e.g. vLLM's `max_model_len`); otherwise set it to the server's max context so long transcripts are only split when they need to be. `<think>` blocks are stripped from replies.
 
 ## Tuning
 
