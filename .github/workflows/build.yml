@@ -1,0 +1,35 @@
+name: Build
+
+on:
+  push:
+    branches: [master]
+    tags: ['*']
+
+jobs:
+  build:
+    runs-on: macos-26
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Build Chapterize.app
+        run: ./build.sh
+
+      # Artifacts drop symlinks and exec bits, so ship the .app zipped.
+      - name: Zip app
+        run: ditto -c -k --keepParent build/Chapterize.app Chapterize.zip
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Chapterize
+          path: Chapterize.zip
+
+      # Falls back to uploading if the release was already created in the GitHub UI.
+      - name: Attach to release
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" Chapterize.zip --generate-notes \
+            || gh release upload "$GITHUB_REF_NAME" Chapterize.zip --clobber
