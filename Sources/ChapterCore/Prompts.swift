@@ -3,16 +3,36 @@ import Foundation
 public enum Prompts {
     /// Example titles shown to the model as a style guide. Editable in Settings.
     public static let defaultStyleExamples = """
-    00:00 - ALL the KVMs
-    01:59 - Caution
-    04:49 - The one that got me an FBI visit
-    07:43 - Protect and 5G quirks
-    09:04 - From livestream build to ER in 1 day
-    02:57 - Seeing WiFi through walls
-    05:23 - Releasing the magic smoke
-    09:58 - EIRP and the megawatt moon-bounce version
-    03:23 - Intel efficiency
-    04:43 - Still a budget laptop
+    TOASTY!
+    You probably won't buy it
+    Don't climb energized towers, even once
+    I was bamboozled. Don't be me
+    x86 still reigns
+    Timing Lab - PTP, NTP, PPS
+    Adding 2 more RISC-V cores (via expansion module)
+    Is it worth the upgrade?
+    Installing a dGPU (RTX A2000)
+    Massive LLMs
+    NTP timing and why it doesn't matter
+    Chromium runs, but it's not for that
+    DFU mode recovery (yes it's required)
+    Pi 4 walkthrough (ft solder voids)
+    Charging was more confusing than I expected
+    Black Mesa (the curse of the blinking cursor)
+    Argon ONE UP - a Pi CM5 laptop
+    Three mini NASes
+    WiFi 7 Hype Train
+    Recapping the Power Supply
+    Discovering the dumb
+    Technical difficulties (are learning opportunities)
+    HPL and llama.cpp cluster performance
+    Spouse Approval Factor
+    Only one screw left over!
+    Pi-hole runs pretty well, actually
+    Controlling your own destiny. And dishwasher.
+    Why recompile Linux?
+    GE Adora and planned obsolescence
+    Remote control power (and safeguards)
     """
 
     /// Turn "00:00 - Title" lines (or bare titles) into a "- Title" list, so the
